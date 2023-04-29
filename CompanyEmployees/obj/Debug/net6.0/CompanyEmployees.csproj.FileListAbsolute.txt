@@ -30,3 +30,10 @@ E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\obj\Debug\net6.0\ref
 E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\obj\Debug\net6.0\CompanyEmployees.pdb
 E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\obj\Debug\net6.0\CompanyEmployees.genruntimeconfig.cache
 E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\obj\Debug\net6.0\ref\CompanyEmployees.dll
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\nlog.config
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\NLog.dll
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\NLog.Extensions.Logging.dll
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\Contracts.dll
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\LoggerService.dll
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\LoggerService.pdb
+E:\Workspace\ASP.NET Core\CompanyEmployees\CompanyEmployees\bin\Debug\net6.0\Contracts.pdb
