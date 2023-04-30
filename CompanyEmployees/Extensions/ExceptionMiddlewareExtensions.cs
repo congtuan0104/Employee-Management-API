@@ -1,0 +1,36 @@
+using System.Net;
+using Contracts;
+using Entities.ErrorModels;
+using Microsoft.AspNetCore.Diagnostics;
+
+namespace CompanyEmployees.Extensions;
+
+public static class ExceptionMiddlewareExtensions
+{
+    public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager logger)
+    {
+        app.UseExceptionHandler(appError =>
+        {
+            // If application have error then call the Run method to handle the error
+            // and terminal the application's pipeline 
+            appError.Run(async context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+                if (contextFeature != null)
+                {
+                    logger.LogError($"Something went wrong: {contextFeature.Error}");
+
+                    await context.Response.WriteAsync(new ErrorDetails
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = "Internal Server Error."
+                    }.ToString());
+                }
+            });
+        });
+    }
+}
