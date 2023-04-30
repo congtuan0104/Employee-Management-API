@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using CompanyEmployees.Presentation;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -13,7 +14,8 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AssemblyReference).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,7 +32,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     // HTTP Strict Transport Security Protocol
-    app.UseHsts();  
+    app.UseHsts();
 }
 
 // Enables using static files for the request, use wwwroot as default folder
@@ -44,7 +46,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors("CorsPolicy");
 
-app.UseHttpsRedirection();  // redirect http to https
+app.UseHttpsRedirection(); // redirect http to https
 
 app.UseAuthorization();
 
@@ -52,9 +54,9 @@ app.UseAuthorization();
 // Task UseMiddleware(HttpContext context, Func<Task> next)
 app.Use(async (context, next) =>
 {
-    Console.WriteLine($"Logic before executing the next delegate in the Use method");
+    Console.WriteLine("Logic before executing the next delegate in the Use method");
     await next.Invoke();
-    Console.WriteLine($"Logic after executing the next delegate in the Use method");
+    Console.WriteLine("Logic after executing the next delegate in the Use method");
 });
 
 // ReSharper disable once VariableHidesOuterVariable
@@ -68,19 +70,16 @@ app.Map("/usingmapbranch", builder =>
     });
     builder.Run(async context =>
     {
-        Console.WriteLine($"Map branch response to the client in the Run method");
+        Console.WriteLine("Map branch response to the client in the Run method");
         await context.Response.WriteAsync("Hello from the map branch.");
     });
 });
 
-app.MapWhen(context => context.Request.Query.ContainsKey("testquerystring"), 
+app.MapWhen(context => context.Request.Query.ContainsKey("testquerystring"),
     builder =>
-{
-    builder.Run(async context =>
     {
-        await context.Response.WriteAsync("Hello from the MapWhen branch.");
+        builder.Run(async context => { await context.Response.WriteAsync("Hello from the MapWhen branch."); });
     });
-});
 
 // app.Run(async context =>
 // {
@@ -88,7 +87,6 @@ app.MapWhen(context => context.Request.Query.ContainsKey("testquerystring"),
 //     await context.Response.WriteAsync("This message from custom middleware.");
 // });
 
-app.MapControllers();   // add endpoints from controllers to the route
+app.MapControllers(); // add endpoints from controllers to the route
 
 app.Run();
-
