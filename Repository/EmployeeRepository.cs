@@ -9,10 +9,17 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
     {
     }
 
-    public IEnumerable<Employee> GetAllEmployees(bool trackChanges)
+    public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges)
     {
-        return FindAll(trackChanges)
+        return FindByCondition(c => c.CompanyId.Equals(companyId), trackChanges)
             .OrderBy(e => e.Name)
             .ToList();
+    }
+
+    public Employee? GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        return FindByCondition(c => c.CompanyId.Equals(companyId)
+                                    && c.Id.Equals(employeeId), trackChanges)
+            .SingleOrDefault();
     }
 }

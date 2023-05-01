@@ -4,5 +4,7 @@ namespace Contracts;
 
 public interface IEmployeeRepository
 {
-    public IEnumerable<Employee> GetAllEmployees(bool trackChanges);
+    public IEnumerable<Employee> GetEmployees(Guid companyId, bool trackChanges);
+
+    public Employee? GetEmployee(Guid companyId, Guid employeeId, bool trackChanges);
 }
