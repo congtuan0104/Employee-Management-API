@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contacts;
+using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Presentation;
 
 [Route("api/companies/{companyId}/employees")]
+[ApiController]
 public class EmployeesController : ControllerBase
 {
     private readonly IServiceManager _service;
@@ -21,11 +23,30 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
-    [HttpGet("{employeeId}")]
-    public IActionResult GetEmployeeForCompany(Guid companyId, Guid employeeId)
+    [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]
+    public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
     {
-        var employee = _service.EmployeeService.GetEmployee(companyId, employeeId, false);
+        var employee = _service.EmployeeService.GetEmployee(companyId, id, false);
 
         return Ok(employee);
+    }
+
+    [HttpPost]
+    public IActionResult CreateEmployeeForCompany(
+        Guid companyId,
+        [FromBody] EmployeeForCreationDto? employee)
+    {
+        if (employee is null)
+            return BadRequest("EmployeeForCreationDto object is null");
+
+        var employeeToReturn = _service.EmployeeService.CreateEmployeeForCompany(
+            companyId,
+            employee,
+            false);
+
+        return CreatedAtRoute(
+            "GetEmployeeForCompany",
+            new { companyId, id = employeeToReturn.Id },
+            employeeToReturn);
     }
 }

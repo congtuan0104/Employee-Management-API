@@ -2,7 +2,7 @@ namespace Shared.DataTransferObjects;
 
 public record EmployeeDto
 {
-    public Guid CompanyId { get; init; }
+    public Guid Id { get; init; }
 
     public string? Name { get; init; }
 

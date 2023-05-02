@@ -22,4 +22,10 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
                                     && c.Id.Equals(employeeId), trackChanges)
             .SingleOrDefault();
     }
+
+    public void CreateEmployeeForCompany(Guid companyId, Employee employee)
+    {
+        employee.CompanyId = companyId;
+        Create(employee);
+    }
 }
