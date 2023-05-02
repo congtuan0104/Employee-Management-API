@@ -3,6 +3,8 @@ using CompanyEmployees.Presentation;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,19 @@ builder.Services.AddControllers(
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
+            config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+
+            NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
+            {
+                // configures support for JSON Patch using
+                // Newtonsoft.Json while leaving the other formatters unchanged
+#pragma warning disable ASP0000
+                return new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+                    .Services.BuildServiceProvider()
+#pragma warning restore ASP0000
+                    .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+                    .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+            }
         })
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCsvFormatter()

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contacts;
 using Shared.DataTransferObjects;
@@ -65,9 +66,35 @@ public class EmployeesController : ControllerBase
         [FromBody] EmployeeForUpdateDto? employee)
     {
         if (employee is null)
+
             return BadRequest("EmployeeForUpdateDto object is null");
 
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, false, true);
+
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}")]
+    public IActionResult PartiallyUpdateEmployeeForCompany(
+        Guid companyId,
+        Guid id,
+        [FromBody] JsonPatchDocument<EmployeeForUpdateDto>? patchDoc)
+    {
+        if (patchDoc is null)
+            return BadRequest("Patch document object sent from client is null");
+
+        var (employeeToPatch, employeeEntity) = _service.EmployeeService.GetEmployeeForPatch(
+            companyId,
+            id,
+            false,
+            true);
+
+        patchDoc.ApplyTo(employeeToPatch);
+
+        if (!TryValidateModel(employeeToPatch))
+            return ValidationProblem(ModelState);
+
+        _service.EmployeeService.SaveChangesForPatch(employeeToPatch, employeeEntity);
 
         return NoContent();
     }
