@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contacts;
 using Shared.DataTransferObjects;
 
-namespace CompanyEmployees.Presentation;
+namespace CompanyEmployees.Presentation.Controllers;
 
 [Route("api/companies/{companyId}/employees")]
 [ApiController]
@@ -40,6 +40,9 @@ public class EmployeesController : ControllerBase
         if (employee is null)
             return BadRequest("EmployeeForCreationDto object is null");
 
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var employeeToReturn = _service.EmployeeService.CreateEmployeeForCompany(
             companyId,
             employee,
@@ -66,8 +69,10 @@ public class EmployeesController : ControllerBase
         [FromBody] EmployeeForUpdateDto? employee)
     {
         if (employee is null)
-
             return BadRequest("EmployeeForUpdateDto object is null");
+
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, false, true);
 
@@ -89,7 +94,13 @@ public class EmployeesController : ControllerBase
             false,
             true);
 
-        patchDoc.ApplyTo(employeeToPatch);
+        patchDoc.ApplyTo(employeeToPatch, ModelState);
+
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
+        // prevent an invalid employeeEntity from being saved to the database
+        TryValidateModel(employeeToPatch);
 
         if (!TryValidateModel(employeeToPatch))
             return ValidationProblem(ModelState);

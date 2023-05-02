@@ -46,6 +46,9 @@ public class CompaniesController : ControllerBase
         if (company is null)
             return BadRequest("Company Data For Creation object is null");
 
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var companyToReturn = _service.CompanyService.CreateCompany(company);
 
         return CreatedAtRoute(
@@ -78,6 +81,9 @@ public class CompaniesController : ControllerBase
     {
         if (company is null)
             return BadRequest("CompanyForUpdateDto object is null");
+        
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
         _service.CompanyService.UpdateCompany(id, company, true);
 
