@@ -32,7 +32,8 @@ public class CompaniesController : ControllerBase
 
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
     public IActionResult GetCompanyCollection(
-        [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        [ModelBinder(BinderType = typeof(ArrayModelBinder))]
+        IEnumerable<Guid> ids)
     {
         var companies = _service.CompanyService.GetByIds(ids, false);
 
@@ -62,5 +63,13 @@ public class CompaniesController : ControllerBase
             "CompanyCollection",
             new { result.ids },
             result.companies);
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteCompany(Guid id)
+    {
+        _service.CompanyService.DeleteCompany(id, false);
+
+        return NoContent();
     }
 }

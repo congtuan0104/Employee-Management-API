@@ -4,12 +4,14 @@ namespace Service.Contacts;
 
 public interface IEmployeeService
 {
-    public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges);
+    IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges);
 
-    public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges);
+    EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges);
 
-    public EmployeeDto CreateEmployeeForCompany(
+    EmployeeDto CreateEmployeeForCompany(
         Guid companyId,
         EmployeeForCreationDto employeeForCreation,
         bool trackChanges);
+
+    void DeleteEmployeeForCompany(Guid companyId, Guid employeeId, bool trackChanges);
 }

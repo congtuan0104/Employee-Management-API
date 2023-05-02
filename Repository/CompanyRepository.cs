@@ -31,4 +31,9 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     {
         Create(company);
     }
+
+    public void DeleteCompany(Company company)
+    {
+        Delete(company);
+    }
 }
