@@ -1,10 +1,12 @@
 using Entities.Models;
+using Shared.RequestParameters;
 
 namespace Contracts;
 
 public interface IEmployeeRepository
 {
-    public Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, bool trackChanges);
+    public Task<IEnumerable<Employee>> GetEmployeesAsync(
+        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
 
     public Task<Employee?> GetEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
 

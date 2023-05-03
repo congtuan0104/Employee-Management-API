@@ -1,11 +1,13 @@
 using Entities.Models;
 using Shared.DataTransferObjects;
+using Shared.RequestParameters;
 
 namespace Service.Contacts;
 
 public interface IEmployeeService
 {
-    Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, bool trackChanges);
+    Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(
+        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
 
     Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
 
