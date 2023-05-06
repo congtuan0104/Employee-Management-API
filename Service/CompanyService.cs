@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contacts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -18,15 +19,6 @@ internal sealed class CompanyService : ICompanyService
         _repository = repository;
         _logger = logger;
         _mapper = mapper;
-    }
-
-    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
-    {
-        var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges);
-
-        var companyDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
-
-        return companyDto;
     }
 
     public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)
@@ -63,8 +55,8 @@ internal sealed class CompanyService : ICompanyService
         return companyToReturn;
     }
 
-    public async Task<(IEnumerable<CompanyDto> companies, string ids)> CreateCompanyCollectionAsync(
-        IEnumerable<CompanyForCreationDto> companyCollection)
+    public async Task<(IEnumerable<CompanyDto> companies, string ids)>
+        CreateCompanyCollectionAsync(IEnumerable<CompanyForCreationDto> companyCollection)
     {
         if (companyCollection is null)
             throw new CompanyCollectionBadRequst();
@@ -95,6 +87,17 @@ internal sealed class CompanyService : ICompanyService
 
         _mapper.Map(companyForUpdate, companyEntity);
         await _repository.SaveAsync();
+    }
+
+    public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)>
+        GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges)
+    {
+        var companiesWithMetaData = await _repository.Company
+            .GetAllCompaniesAsync(companyParameters, trackChanges);
+
+        var companyDto = _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetaData);
+
+        return (companies: companyDto, metaData: companiesWithMetaData.MetaData);
     }
 
     private async Task<Company> GetCompanyIfExists(Guid id, bool trackChanges)

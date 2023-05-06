@@ -1,10 +1,11 @@
 using Entities.Models;
+using Shared.RequestFeatures;
 
 namespace Contracts;
 
 public interface ICompanyRepository
 {
-    Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges);
+    Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters companyParameters, bool trackChanges);
 
     Task<Company?> GetCompanyAsync(Guid companyId, bool trackChanges);
 
