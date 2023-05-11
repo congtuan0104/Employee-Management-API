@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Repository;
 using Service;
 using Service.Contacts;
+using Service.DataShaping;
+using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Extensions;
 
@@ -66,5 +68,10 @@ public static class ServiceExtensions
     {
         return builder.AddMvcOptions(
             config => config.OutputFormatters.Add(new CsvOutputFormatter()));
+    }
+
+    public static void ConfigureDataShaper(this IServiceCollection services)
+    {
+        services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
     }
 }
