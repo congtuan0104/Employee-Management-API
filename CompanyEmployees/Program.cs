@@ -1,6 +1,7 @@
 using CompanyEmployees.Extensions;
 using CompanyEmployees.Presentation;
 using CompanyEmployees.Presentation.ActionFilters;
+using CompanyEmployees.Utility;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<ValidateMediaTypeAttribute>();
+builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();
 builder.Services.AddControllers(
         config =>
         {
@@ -49,6 +52,7 @@ builder.Services.AddControllers(
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCsvFormatter()
     .AddApplicationPart(typeof(AssemblyReference).Assembly);
+builder.Services.AddCustomMediaTypes();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

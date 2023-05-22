@@ -1,4 +1,4 @@
-using System.Dynamic;
+using Entities.LinkModels;
 using Entities.Models;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
@@ -7,8 +7,8 @@ namespace Service.Contacts;
 
 public interface IEmployeeService
 {
-    Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployeesAsync(
-        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
+    Task<(LinkResponse linkResponse, MetaData metaData)> GetEmployeesAsync(
+        Guid companyId, LinkParameters linkParameters, bool trackChanges);
 
     Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
 
