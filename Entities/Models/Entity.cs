@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Dynamic;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using Entities.LinkModels;
 
 namespace Entities.Models;
 
-public class Entity : DynamicObject, IXmlSerializable, IDictionary<string, object>
+public class Entity : DynamicObject, IDictionary<string, object>
 {
     private readonly IDictionary<string, object> _expando;
     private readonly string _root = "Entity";
@@ -86,10 +84,6 @@ public class Entity : DynamicObject, IXmlSerializable, IDictionary<string, objec
         return GetEnumerator();
     }
 
-    public XmlSchema GetSchema()
-    {
-        throw new NotImplementedException();
-    }
 
     public void ReadXml(XmlReader reader)
     {
