@@ -31,6 +31,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();
@@ -104,6 +107,8 @@ app.UseResponseCaching();
 app.UseHttpCacheHeaders();
 
 app.UseHttpsRedirection(); // redirect http to https
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
