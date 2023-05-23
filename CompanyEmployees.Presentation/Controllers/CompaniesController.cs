@@ -1,6 +1,7 @@
 using System.Text.Json;
 using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contacts;
 using Shared.DataTransferObjects;
@@ -11,6 +12,7 @@ namespace CompanyEmployees.Presentation.Controllers;
 [ApiVersion("1.0")]
 [Route("api/companies")]
 [ApiController]
+[ResponseCache(CacheProfileName = "120SecondsDuration")]
 public class CompaniesController : ControllerBase
 {
     private readonly IServiceManager _service;
@@ -31,6 +33,8 @@ public class CompaniesController : ControllerBase
         return Ok(pagedResult.companies);
     }
 
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+    [HttpCacheValidation(MustRevalidate = false)]
     [HttpGet("{id:guid}", Name = "CompanyById")]
     public async Task<IActionResult> GetCompany(Guid id)
     {

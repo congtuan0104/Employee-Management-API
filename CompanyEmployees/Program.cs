@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using CompanyEmployees.Extensions;
 using CompanyEmployees.Presentation;
 using CompanyEmployees.Presentation.ActionFilters;
@@ -28,6 +29,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 builder.Services.ConfigureVersioning();
+builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();
@@ -37,6 +40,10 @@ builder.Services.AddControllers(
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
             config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+            config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+            {
+                Duration = 120
+            });
 
             NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
             {
@@ -54,6 +61,9 @@ builder.Services.AddControllers(
     .AddCustomCsvFormatter()
     .AddApplicationPart(typeof(AssemblyReference).Assembly);
 builder.Services.AddCustomMediaTypes();
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -85,7 +95,13 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+app.UseIpRateLimiting();
+
 app.UseCors("CorsPolicy");
+
+app.UseResponseCaching();
+
+app.UseHttpCacheHeaders();
 
 app.UseHttpsRedirection(); // redirect http to https
 
