@@ -27,6 +27,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     // enable custom responses from the actions ApiController
     options.SuppressModelStateInvalidFilter = true;
 });
+builder.Services.ConfigureVersioning();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddScoped<IEmployeeLinks, EmployeeLinks>();
