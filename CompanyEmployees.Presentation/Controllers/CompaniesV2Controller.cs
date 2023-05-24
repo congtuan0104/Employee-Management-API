@@ -6,7 +6,7 @@ using Shared.RequestFeatures;
 namespace CompanyEmployees.Presentation.Controllers;
 
 [ApiVersion("2.0", Deprecated = true)]
-[Route("api/companies2")]
+[Route("api/companies")]
 [ApiController]
 public class CompaniesV2Controller : ControllerBase
 {
